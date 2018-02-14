@@ -1,0 +1,21 @@
+scene {
+	camera {
+		origin(10, -3, 4);
+		direction(0, 0, 0);
+	}
+	light {
+		lights(1);
+		origin(5, -2, 4);
+	}
+	plane {
+		origin(0, 1, 0);
+		color(0, 180, 190);
+		distance(1);
+	}
+	cone {
+		origin(0, 0, 0);
+		direction(0, 3, 0);
+		color(0, 0, 190);
+		angle(20);
+	}
+}

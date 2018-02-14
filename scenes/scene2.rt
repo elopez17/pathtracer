@@ -1,0 +1,21 @@
+scene {
+	camera {
+		origin(10, -3, 4);
+		direction(0, 0, 0);
+	}
+	light {
+		lights(1);
+		origin(20, -6, 8);
+	}
+	plane {
+		origin(0, 1, 0);
+		color(250, 250, 250);
+		distance(1);
+	}
+	cylinder {
+		origin(0, 0, 0);
+		direction(1, 1, 0);
+		color(230, 200, 50);
+		radius(1);
+	}
+}
