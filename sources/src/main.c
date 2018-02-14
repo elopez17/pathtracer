@@ -6,7 +6,7 @@
 /*   By: oabdalha <oabdalha@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/11/27 13:32:37 by oabdalha          #+#    #+#             */
-/*   Updated: 2018/02/13 21:57:00 by eLopez           ###   ########.fr       */
+/*   Updated: 2018/02/13 23:12:56 by eLopez           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ int			main(int argc, char *argv[])
 		rt_error(0);
 	init_rt(&rt, argv[1]);
 	controls(rt);
-	multithread(rt);
+	scene(rt);
 	draw(rt);
 	mlx_hook(rt->win, 2, 0, &key_hook, &rt);
 	mlx_hook(rt->win, 4, 0, &mousepress, &rt);

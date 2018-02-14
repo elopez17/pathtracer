@@ -6,7 +6,7 @@
 /*   By: eLopez <elopez@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/06 18:47:13 by eLopez            #+#    #+#             */
-/*   Updated: 2018/02/13 21:58:33 by eLopez           ###   ########.fr       */
+/*   Updated: 2018/02/13 23:15:59 by eLopez           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,6 @@
 #define IRFL tmp->io_refl
 #define ITRN tmp->io_trans
 
-pthread_mutex_t g_lock;
 static int		g_count = -1;
 
 static t_rgb	color_at(t_ray *intersect, int index, t_rt *rt, int depth)
@@ -81,30 +80,23 @@ inline void		set_ray_xy(t_rt *rt, t_ray *ray, t_xy *pixel)
 					dir.x - 0.5), vmult(rt->cam.down, dir.y - 0.5))));
 }
 
-void			*scene(void *rt)
+void			scene(t_rt *rt)
 {
 	t_xy		pixel;
 	t_ray		ray;
 	t_ray		intersection;
 	int			index;
-	t_rt		*p_rt;
 
-	p_rt = (t_rt*)rt;
-	pixel.y = p_rt->ystart - 1;
-	pthread_mutex_lock(&g_lock);
-	while (++pixel.y < p_rt->ymax)
+	pixel.y = -1;
+	while (++pixel.y < rt->w.height)
 	{
 		pixel.x = -1;
-		while (++pixel.x < p_rt->w.width)
+		while (++pixel.x < rt->w.width)
 		{
-			set_ray_xy(p_rt, &ray, &pixel);
-			index = findintersect(&intersection, ray, p_rt);
-			putpixel(p_rt, pixel.x, pixel.y,
-									color_at(&intersection, index, p_rt, 0));
+			set_ray_xy(rt, &ray, &pixel);
+			index = findintersect(&intersection, ray, rt);
+			putpixel(rt, pixel.x, pixel.y,
+									color_at(&intersection, index, rt, 0));
 		}
 	}
-	(++g_count < 4) ? ft_printf("%{gr}%s", "████████████████████") : 0;
-	pthread_mutex_unlock(&g_lock);
-	pthread_exit(0);
-	return (rt);
 }

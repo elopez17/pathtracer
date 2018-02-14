@@ -6,7 +6,7 @@
 /*   By: eLopez <eLopez@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/07/21 00:06:40 by eLopez            #+#    #+#             */
-/*   Updated: 2018/02/13 22:00:00 by eLopez           ###   ########.fr       */
+/*   Updated: 2018/02/13 23:16:52 by eLopez           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -212,7 +212,6 @@ typedef struct			s_rt
 	int		ymax;
 }						t_rt;
 
-void					multithread(t_rt *rt);
 void					draw(t_rt *rt);
 extern inline void		putpixel(t_rt *rt, int x, int y, t_rgb color);
 int						key_hook(int key, t_rt **rt);
@@ -246,7 +245,7 @@ extern inline t_vect	sphere_norm(t_union u, t_vect point);
 extern inline t_vect	plane_norm(t_union u, t_vect point);
 extern inline t_vect	cone_norm(t_union u, t_vect point);
 extern inline t_vect	cylinder_norm(t_union u, t_vect point);
-void					*scene(void *rt);
+void					scene(t_rt *rt);
 extern inline t_rgb		cscalar(t_rgb color, double scalar);
 extern inline t_rgb		cadd(t_rgb clr1, t_rgb clr2);
 extern inline t_rgb		cmult(t_rgb clr1, t_rgb clr2);

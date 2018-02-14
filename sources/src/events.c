@@ -6,7 +6,7 @@
 /*   By: elopez <elopez@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/11/27 13:32:37 by elopez            #+#    #+#             */
-/*   Updated: 2018/02/13 21:55:30 by eLopez           ###   ########.fr       */
+/*   Updated: 2018/02/13 23:14:00 by eLopez           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,7 +85,7 @@ int		key_hook(int key, t_rt **rt)
 	}
 	else if ((*rt)->current != NULL)
 		move_obj(key, &(*rt)->current, (*rt)->toggle);
-	multithread(*rt);
+	scene(*rt);
 	(key == KEYENT) ? swap_filter((*rt)->addr) : 0;
 	draw(*rt);
 	return (0);
