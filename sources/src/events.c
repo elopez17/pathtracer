@@ -6,7 +6,7 @@
 /*   By: elopez <elopez@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/11/27 13:32:37 by elopez            #+#    #+#             */
-/*   Updated: 2018/02/13 23:14:00 by eLopez           ###   ########.fr       */
+/*   Updated: 2018/02/16 20:06:57 by eLopez           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,6 +80,7 @@ int		key_hook(int key, t_rt **rt)
 			ft_memdel((void**)&(*rt)->obj);
 			(*rt)->obj = tmp;
 		}
+		ft_memdel((void**)&(*rt)->image);
 		rt_memdel(rt);
 		exit(0);
 	}

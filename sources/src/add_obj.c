@@ -6,7 +6,7 @@
 /*   By: evanheum <evanheum@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/25 11:02:14 by evanheum          #+#    #+#             */
-/*   Updated: 2018/02/13 21:54:24 by eLopez           ###   ########.fr       */
+/*   Updated: 2018/02/16 20:03:09 by eLopez           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,18 +21,14 @@ void	addsphere(t_rt **rt)
 	obj->type = 1;
 	obj->u.sphere.pos = (t_vect){0, 0, 0};
 	obj->u.sphere.radius = 1;
-	obj->u.sphere.clr = (t_rgb){220, 90, 90};
+	obj->u.sphere.clr = (t_rgb){255, 255, 255};
 	obj->normal = &sphere_norm;
 	obj->inter = &findintersphere;
 	obj->clr = obj->u.sphere.clr;
-	obj->reflect = 1;
+	obj->emission = (t_rgb){255, 255, 255};
 	obj->refract = 0;
-	obj->transparent = 0;
-	obj->ior = 1.3;
-	obj->io_refl = 1.0;
-	obj->io_trans = 0.9;
-	obj->spec = 0.3;
-	obj->diff = 0.6;
+	obj->spec = 0;
+	obj->diff = 1;
 	obj->amb = 0.2;
 	obj->m = 4;
 	obj->next = (*rt)->obj;
@@ -53,14 +49,10 @@ void	addplane(t_rt **rt)
 	obj->normal = &plane_norm;
 	obj->inter = &findinterplane;
 	obj->clr = obj->u.plane.clr;
-	obj->reflect = 0;
+	obj->emission = (t_rgb){0, 0, 0};
 	obj->refract = 0;
-	obj->transparent = 0;
-	obj->ior = 1.3;
-	obj->io_refl = 1.0;
-	obj->io_trans = 0.9;
-	obj->spec = 0.3;
-	obj->diff = 0.6;
+	obj->spec = 0;
+	obj->diff = 1;
 	obj->amb = 0.2;
 	obj->m = 4;
 	obj->next = (*rt)->obj;
@@ -82,14 +74,10 @@ void	addcone(t_rt **rt)
 	obj->normal = &cone_norm;
 	obj->inter = &findintercone;
 	obj->clr = obj->u.cone.clr;
-	obj->reflect = 0;
+	obj->emission = (t_rgb){0, 0, 0};
 	obj->refract = 0;
-	obj->transparent = 0;
-	obj->ior = 1.3;
-	obj->io_refl = 1.0;
-	obj->io_trans = 0.9;
-	obj->spec = 0.3;
-	obj->diff = 0.6;
+	obj->spec = 0;
+	obj->diff = 1;
 	obj->amb = 0.2;
 	obj->m = 4;
 	obj->next = (*rt)->obj;
@@ -111,14 +99,10 @@ void	addcylin(t_rt **rt)
 	obj->normal = &cylinder_norm;
 	obj->inter = &findintercylinder;
 	obj->clr = obj->u.cylinder.clr;
-	obj->reflect = 1;
+	obj->emission = (t_rgb){0, 0, 0};
 	obj->refract = 0;
-	obj->transparent = 0;
-	obj->ior = 1.3;
-	obj->io_refl = 1.0;
-	obj->io_trans = 0.9;
-	obj->spec = 0.3;
-	obj->diff = 0.6;
+	obj->spec = 0;
+	obj->diff = 1;
 	obj->amb = 0.2;
 	obj->m = 4;
 	obj->next = (*rt)->obj;
@@ -141,13 +125,10 @@ void	addcube(t_rt **rt)
 	obj->normal = &cube_norm;
 	obj->inter = &findintercube;
 	obj->clr = obj->u.cube.clr;
-	INIT(obj);
-	obj->transparent = 0;
-	obj->ior = 1.3;
-	obj->io_refl = 1.0;
-	obj->io_trans = 0.9;
-	obj->spec = 0.3;
-	obj->diff = 0.6;
+	obj->emission = (t_rgb){0, 0, 0};
+	obj->refract = 0;
+	obj->spec = 0;
+	obj->diff = 1;
 	obj->amb = 0.2;
 	obj->m = 4;
 	obj->next = (*rt)->obj;

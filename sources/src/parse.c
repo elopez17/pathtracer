@@ -6,13 +6,12 @@
 /*   By: oabdalha <oabdalha@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/11/27 13:32:37 by oabdalha          #+#    #+#             */
-/*   Updated: 2018/02/13 21:57:53 by eLopez           ###   ########.fr       */
+/*   Updated: 2018/02/17 09:07:45 by eLopez           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <pt.h>
 #define OBJINFO(obj,f1,f2,rgb)({obj->normal=f1;obj->clr=rgb;obj->inter=f2;})
-#define INIT(obj)({obj->refract = 0;obj->transparent = 0;})
 
 static int g_flag = 0;
 
@@ -32,13 +31,10 @@ void		getobject(int type, t_union u, t_rt *rt)
 		OBJINFO(obj, &cylinder_norm, &findintercylinder, u.cylinder.clr);
 	else if (type == 5)
 		OBJINFO(obj, &cube_norm, &findintercube, u.cube.clr);
-	obj->reflect = (type == 2) ? 0 : 1;
-	INIT(obj);
-	obj->ior = 1.3;
-	obj->io_refl = 1.0;
-	obj->io_trans = 0.9;
-	obj->spec = 0.3;
-	obj->diff = 0.6;
+	obj->emission = (t_rgb){0, 0, 0};
+	obj->refract = 0;
+	obj->spec = 0;
+	obj->diff = 1;
 	obj->amb = 0.2;
 	obj->m = 4;
 	obj->next = rt->obj;

@@ -6,7 +6,7 @@
 /*   By: oabdalha <oabdalha@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/11/27 13:32:37 by elopez            #+#    #+#             */
-/*   Updated: 2018/02/13 21:58:02 by eLopez           ###   ########.fr       */
+/*   Updated: 2018/02/17 10:02:40 by eLopez           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,13 +21,13 @@ t_rgb	getcolor(const char *line)
 	color = (t_rgb){0, 0, 0};
 	if ((line = ft_strrchr(line, '(')) == NULL)
 		rt_error(2);
-	color.red = ft_atoi(++line);
+	color.red = ft_atod(++line);
 	if ((line = ft_strchr(line, ',')) == NULL)
 		rt_error(2);
-	color.green = ft_atoi(++line);
+	color.green = ft_atod(++line);
 	if ((line = ft_strchr(line, ',')) == NULL)
 		rt_error(2);
-	color.blue = ft_atoi(++line);
+	color.blue = ft_atod(++line);
 	return (color);
 }
 

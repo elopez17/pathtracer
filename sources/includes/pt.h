@@ -6,7 +6,7 @@
 /*   By: eLopez <eLopez@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/07/21 00:06:40 by eLopez            #+#    #+#             */
-/*   Updated: 2018/02/13 23:16:52 by eLopez           ###   ########.fr       */
+/*   Updated: 2018/02/17 11:27:57 by eLopez           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,8 +24,11 @@
 # define THREADS 4
 # define MAX(a, b) (a > b ? a : b)
 # define MIN(a, b) (a < b ? a : b)
-# define PI 3.14159265
-# define EPS 0.00000001
+# define PI 3.1415926536
+# define EPS 1e-6
+# define SPP 100
+# define RND2 ((double)rand()/RAND_MAX)
+# define RND (2*(double)rand()/RAND_MAX-1.0)
 # define KEYDOT 65
 # define KEYENT 76
 # define KTOP1 18
@@ -176,14 +179,10 @@ typedef struct			s_objects
 	double				(*inter)();
 	t_vect				norm;
 	t_rgb				clr;
-	int					reflect;
+	t_rgb				emission;
 	int					refract;
-	int					transparent;
-	double				ior;
-	double				io_refl;
-	double				io_trans;
-	double				spec;
-	double				diff;
+	int					spec;
+	int					diff;
 	double				amb;
 	double				m;
 	struct s_objects	*next;
@@ -196,6 +195,7 @@ typedef struct			s_rt
 	void	*win2;
 	t_dim	w;
 	void	*img;
+	t_rgb	*image;
 	int		bpp;
 	int		len;
 	int		endian;
@@ -208,10 +208,9 @@ typedef struct			s_rt
 	int		nodes;
 	t_obj	*current;
 	int		toggle;
-	int		ystart;
-	int		ymax;
 }						t_rt;
 
+void					save_img(t_rt *rt);
 void					draw(t_rt *rt);
 extern inline void		putpixel(t_rt *rt, int x, int y, t_rgb color);
 int						key_hook(int key, t_rt **rt);

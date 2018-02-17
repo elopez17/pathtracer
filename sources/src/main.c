@@ -6,7 +6,7 @@
 /*   By: oabdalha <oabdalha@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/11/27 13:32:37 by oabdalha          #+#    #+#             */
-/*   Updated: 2018/02/13 23:12:56 by eLopez           ###   ########.fr       */
+/*   Updated: 2018/02/16 20:16:16 by eLopez           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@ static void	init_rt(t_rt **rt, char *file)
 	(*rt)->img = mlx_new_image((*rt)->mlx, (*rt)->w.width, (*rt)->w.height);
 	(*rt)->addr = mlx_get_data_addr((*rt)->img, &((*rt)->bpp), &((*rt)->len),
 													&((*rt)->endian));
+	(*rt)->image = (t_rgb*)ft_memalloc(sizeof(t_rgb) * ((*rt)->w.width * (*rt)->w.height));
 	(*rt)->obj = (t_obj*)NULL;
 	(*rt)->current = (*rt)->obj;
 	(*rt)->nodes = 0;

@@ -16,7 +16,7 @@ PURP	= \x1b[35m
 TURQ	= \x1b[36m
 WHT		= \x1b[37m
 CC		= gcc
-CFLAGS	= -Wall -Wextra -g -w -lpthread -std=c99 -O3
+CFLAGS	= -Wall -Wextra -w -lpthread -std=c99 -O3
 SRC		= add_obj.c\
 color.c\
 controls.c\
@@ -28,7 +28,6 @@ filter.c\
 filter2.c\
 intersect.c\
 intersect2.c\
-light.c\
 main.c\
 memdel.c\
 mod.c\
@@ -39,7 +38,7 @@ parse2.c\
 parse3.c\
 putpixel.c\
 scene.c\
-threads.c\
+image.c\
 vect.c\
 vect2.c\
 
@@ -52,6 +51,9 @@ EX		= RT
 all:
 	@$(MAKE) -j $(LIB)
 	@$(MAKE) -j $(EX)
+
+prog: $(LIB)
+	$(CC) $(CFLAGS) -I $(INC) -I sources/minilibx -o prog main.c -L sources -lft -L sources/minilibx -lmlx -framework OpenGL -framework AppKit
 
 $(EX): $(OBJ)
 	@make -C sources/minilibx/
