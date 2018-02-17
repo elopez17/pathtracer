@@ -59,7 +59,7 @@ $(EX): $(OBJ)
 	@make -C sources/minilibx/
 	@echo "$(RED)  libmlx.a$(GRN) Successfully Created.$(NO_COLOR)"
 	@$(CC) $(CFLAGS) -I $(INC) -I sources/minilibx -o $(EX) $(OBJ) -L sources -lft -L sources/minilibx -lmlx -framework OpenGL -framework AppKit
-	@echo "$(RED)  ./RT$(GRN) Successfully Created.$(NO_COLOR)"
+	@echo "$(RED)  ./PT$(GRN) Successfully Created.$(NO_COLOR)"
 
 $(ODIR)/%.o:sources/src/%.c | $(ODIR)
 	@$(CC) -c $(CFLAGS) -I $(INC) -I sources/minilibx -o $@  $<

@@ -6,7 +6,7 @@
 /*   By: oabdalha <oabdalha@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/11/27 13:32:37 by oabdalha          #+#    #+#             */
-/*   Updated: 2018/02/17 12:39:14 by eLopez           ###   ########.fr       */
+/*   Updated: 2018/02/17 13:20:36 by eLopez           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,8 @@ static void	init_rt(t_rt **rt, char *file)
 	(*rt)->w.height = 800;
 	(*rt)->win = mlx_new_window((*rt)->mlx, (*rt)->w.width, (*rt)->w.height,
 							"elopez @ 42");
-	(*rt)->win2 = mlx_new_window((*rt)->mlx, (*rt)->w.width, 730,
-										"Controls");
+//	(*rt)->win2 = mlx_new_window((*rt)->mlx, (*rt)->w.width, 730,
+//										"Controls");
 	(*rt)->img = mlx_new_image((*rt)->mlx, (*rt)->w.width, (*rt)->w.height);
 	(*rt)->addr = mlx_get_data_addr((*rt)->img, &((*rt)->bpp), &((*rt)->len),
 													&((*rt)->endian));
@@ -47,7 +47,7 @@ int			main(int argc, char *argv[])
 	if (argc != 2 || !ft_strstr(argv[1], ".rt"))
 		rt_error(0);
 	init_rt(&rt, argv[1]);
-	controls(rt);
+//	controls(rt);
 	scene(rt);
 	draw(rt);
 	mlx_hook(rt->win, 2, 0, &key_hook, &rt);
