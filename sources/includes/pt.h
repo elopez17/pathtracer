@@ -6,7 +6,7 @@
 /*   By: eLopez <eLopez@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/07/21 00:06:40 by eLopez            #+#    #+#             */
-/*   Updated: 2018/02/17 11:27:57 by eLopez           ###   ########.fr       */
+/*   Updated: 2018/02/17 12:38:13 by eLopez           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,11 +22,11 @@
 # include <mlx.h>
 # include <pthread.h>
 # define THREADS 4
-# define MAX(a, b) (a > b ? a : b)
-# define MIN(a, b) (a < b ? a : b)
+# define MAX(a, b) ((a) > (b) ? (a) : (b))
+# define MIN(a, b) ((a) < (b) ? (a) : (b))
 # define PI 3.1415926536
 # define EPS 1e-6
-# define SPP 100
+# define SPP 50
 # define RND2 ((double)rand()/RAND_MAX)
 # define RND (2*(double)rand()/RAND_MAX-1.0)
 # define KEYDOT 65
@@ -231,8 +231,6 @@ extern inline t_vect	vdiv(t_vect v, double denominator);
 extern inline t_vect	vdiff(t_vect v1, t_vect v2);
 extern inline void		set_ray_xy(t_rt *rt, t_ray *ray, t_xy *pixel);
 int						winningobject(double *intersects, int nodes);
-t_rgb					refl_refr(t_obj *tmp, t_ray *intersect, t_rt *rt,
-		int depth);
 double					findinterplane(t_ray ray, t_union u);
 double					findintersphere(t_ray ray, t_union u);
 double					findintercone(t_ray ray, t_union u);
@@ -253,10 +251,6 @@ void					rt_error(int code);
 void					parsefile(t_rt *rt);
 t_vect					getxyz(const char *line);
 t_rgb					getcolor(const char *line);
-t_rgb					addlight(t_rt *rt, t_ray *inter, t_obj *obj,
-		t_vect light);
-t_rgb					lighting(t_obj *obj, t_ray *intersect, t_vect light,
-		double shadow);
 void					getcam(t_rt *rt);
 void					getlight(t_rt *rt);
 t_union					getcube(t_rt *rt);

@@ -6,7 +6,7 @@
 /*   By: eLopez <elopez@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/06 18:47:13 by eLopez            #+#    #+#             */
-/*   Updated: 2018/02/17 11:00:32 by eLopez           ###   ########.fr       */
+/*   Updated: 2018/02/17 12:26:17 by eLopez           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -141,8 +141,8 @@ inline void		set_ray_xy(t_rt *rt, t_ray *ray, t_xy *pixel)
 {
 	t_xy		dir;
 
-	dir.x = (pixel->x / rt->w.width);
-	dir.y = ((rt->w.height - pixel->y) / rt->w.height);
+	dir.x = (pixel->x / rt->w.width) + (RND / 700);
+	dir.y = ((rt->w.height - pixel->y) / rt->w.height) + (RND / 700);
 	ray->origin = rt->cam.pos;
 	ray->dir = normalize(vadd(rt->cam.dir, vadd(vmult(rt->cam.right,
 					dir.x - 0.5), vmult(rt->cam.down, dir.y - 0.5))));
