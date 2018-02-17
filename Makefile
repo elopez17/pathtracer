@@ -46,7 +46,7 @@ ODIR	:= sources/obj
 OBJ		:= $(addprefix $(ODIR)/,$(SRC:%.c=%.o))
 INC		= sources/includes
 LIB		= sources/libft.a
-EX		= RT
+EX		= PT
 
 all:
 	@$(MAKE) -j $(LIB)
