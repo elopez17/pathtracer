@@ -6,7 +6,7 @@
 /*   By: eLopez <eLopez@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/07/21 00:06:40 by eLopez            #+#    #+#             */
-/*   Updated: 2018/02/17 20:47:32 by eLopez           ###   ########.fr       */
+/*   Updated: 2018/02/17 22:34:58 by eLopez           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@
 # define MIN(a, b) ((a) < (b) ? (a) : (b))
 # define PI 3.1415926536
 # define EPS 1e-6
-# define SPP 20
+# define SPP 100
 # define RND2 ((double)rand_r(&rt->seed)/RAND_MAX)
 # define RND (2*(double)rand_r(&rt->seed)/RAND_MAX-1.0)
 # define KEYDOT 65

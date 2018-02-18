@@ -33,7 +33,7 @@ void	save_img(t_rt *rt)
 			rt->image[i].red = rt->image[i].red / (rt->image[i].red + 1.0);
 			rt->image[i].green = rt->image[i].green / (rt->image[i].green + 1.0);
 			rt->image[i].blue = rt->image[i].blue / (rt->image[i].blue + 1.0);
-			rt->image[i] = cscalar(rt->image[i], 200.0);
+			rt->image[i] = cscalar(rt->image[i], 250.0);
 	//		ft_printf("%.3lf  %.3lf  %.3lf\n", rt->image[i].red,
 	//									rt->image[i].blue, rt->image[i].green);
 			putpixel(rt, x, y, rt->image[i]);
