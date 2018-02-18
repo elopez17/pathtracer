@@ -6,7 +6,7 @@
 /*   By: eLopez <elopez@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/06 18:47:13 by eLopez            #+#    #+#             */
-/*   Updated: 2018/02/17 20:54:40 by eLopez           ###   ########.fr       */
+/*   Updated: 2018/02/17 22:00:17 by eLopez           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,9 +27,6 @@ void	ons(const t_vect n, t_vect *v2, t_vect *v3)
 {
 	double	invLen;
 	double	denom;
-	int		vector[3];
-	int		vect1[3];
-	int		vect2[3];
 
 	if (fabs(n.x) > fabs(n.y)) {
 // project to the y = 0 plane and construct a normalized orthogonal vector in this plane
@@ -43,16 +40,9 @@ void	ons(const t_vect n, t_vect *v2, t_vect *v3)
 		invLen = 1.0 / (denom == 0.0 ? EPS : denom);
 		*v2 = (t_vect){0.0, n.z * invLen, -n.y * invLen};
 	}
-	vect1[0] = n.x;
-	vect1[1] = n.y;
-	vect1[2] = n.z;
-	vect2[0] = v2->x;
-	vect2[1] = v2->y;
-	vect2[2] = v2->z;
-	vector[0] = (vect2[0] == 0) ? vect2[0] : vect1[0] % vect2[0];
-	vector[1] = (vect2[1] == 0) ? vect2[1] : vect1[1] % vect2[1];
-	vector[2] = (vect2[2] == 0) ? vect2[2] : vect1[2] % vect2[2];
-	*v3 = (t_vect){vector[0], vector[1], vector[2]};
+	v3->x = (v2->x == 0.0) ? v2->x : fmod(n.x, v2->x);
+	v3->y = (v2->y == 0.0) ? v2->y : fmod(n.y, v2->y);
+	v3->z = (v2->z == 0.0) ? v2->z : fmod(n.z, v2->z);
 }
 
 static void	trace(t_ray *intersect, t_rgb *color, t_ray ray, t_rt *rt, int depth)
