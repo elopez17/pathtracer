@@ -6,7 +6,7 @@
 /*   By: eLopez <elopez@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/06 18:47:13 by eLopez            #+#    #+#             */
-/*   Updated: 2018/02/17 12:26:17 by eLopez           ###   ########.fr       */
+/*   Updated: 2018/02/17 20:54:40 by eLopez           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 #define IRFL tmp->io_refl
 #define ITRN tmp->io_trans
 
-static int		g_count = -1;
+static int	g_count = -1;
 
 t_vect	hemisphere(double u1, double u2)
 {
@@ -49,9 +49,9 @@ void	ons(const t_vect n, t_vect *v2, t_vect *v3)
 	vect2[0] = v2->x;
 	vect2[1] = v2->y;
 	vect2[2] = v2->z;
-	vector[0] = (vect2[0] == 0) ? vect1[0] : vect1[0] % vect2[0];
-	vector[1] = (vect2[1] == 0) ? vect1[1] : vect1[1] % vect2[1];
-	vector[2] = (vect2[2] == 0) ? vect1[2] : vect1[2] % vect2[2];
+	vector[0] = (vect2[0] == 0) ? vect2[0] : vect1[0] % vect2[0];
+	vector[1] = (vect2[1] == 0) ? vect2[1] : vect1[1] % vect2[1];
+	vector[2] = (vect2[2] == 0) ? vect2[2] : vect1[2] % vect2[2];
 	*v3 = (t_vect){vector[0], vector[1], vector[2]};
 }
 
@@ -77,8 +77,6 @@ static void	trace(t_ray *intersect, t_rgb *color, t_ray ray, t_rt *rt, int depth
 		tmp = tmp->next;
 // Travel the ray to the hit point where the closest object lies and compute the surface
 	//normal there.
-//vec hp == intersect->origin
-//vec N == tmp->norm = tmp->normal(tmp->u, intersect->origin);
 	tmp->norm = tmp->normal(tmp->u, intersect->origin);
 	ray.origin = intersect->origin;
 // Add the emission, the L_e(x,w) part of the rendering equation, but scale it with the Russian Roulette
@@ -157,7 +155,7 @@ void			scene(t_rt *rt)
 	int			i;
 	t_rgb		color;
 
-	srand(time(NULL));
+	rt->seed = time(NULL);
 	for (int iter = 0; iter < SPP; iter++)
 	{
 		pixel.y = -1;
