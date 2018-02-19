@@ -6,7 +6,7 @@
 /*   By: eLopez <eLopez@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/07/21 00:06:40 by eLopez            #+#    #+#             */
-/*   Updated: 2018/02/17 22:34:58 by eLopez           ###   ########.fr       */
+/*   Updated: 2018/02/18 22:47:27 by eLopez           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,10 +25,10 @@
 # define MAX(a, b) ((a) > (b) ? (a) : (b))
 # define MIN(a, b) ((a) < (b) ? (a) : (b))
 # define PI 3.1415926536
-# define EPS 1e-6
-# define SPP 100
+# define EPS 1e-7
+# define SPP 50
 # define RND2 ((double)rand_r(&rt->seed)/RAND_MAX)
-# define RND (2*(double)rand_r(&rt->seed)/RAND_MAX-1.0)
+# define RND (2.0*(double)rand_r(&rt->seed)/RAND_MAX-1.0)
 # define KEYDOT 65
 # define KEYENT 76
 # define KTOP1 18
@@ -203,6 +203,7 @@ typedef struct			s_rt
 	int		fd;
 	t_cam	cam;
 	t_obj	*obj;
+	t_obj	**a_obj;
 	t_vect	*light;
 	int		nlights;
 	int		nodes;

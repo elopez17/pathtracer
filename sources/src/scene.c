@@ -6,17 +6,13 @@
 /*   By: eLopez <elopez@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/06 18:47:13 by eLopez            #+#    #+#             */
-/*   Updated: 2018/02/17 22:00:17 by eLopez           ###   ########.fr       */
+/*   Updated: 2018/02/18 23:01:40 by eLopez           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <pt.h>
-#define IRFL tmp->io_refl
-#define ITRN tmp->io_trans
 
-static int	g_count = -1;
-
-t_vect	hemisphere(double u1, double u2)
+static inline t_vect	hemisphere(double u1, double u2)
 {
 	const double r = sqrt(1.0 - u1*u1);
 	const double phi = 2 * PI * u2;
@@ -48,7 +44,7 @@ void	ons(const t_vect n, t_vect *v2, t_vect *v3)
 static void	trace(t_ray *intersect, t_rgb *color, t_ray ray, t_rt *rt, int depth)
 {
 	int		index;
-	t_obj	*tmp;
+	t_obj	*obj;
 	t_rgb	clr2 = (t_rgb){1, 1, 1};
 	double	rrFactor = 1.0;
 // Russian roulette: starting at depth 5, each recursive step will stop with a probability of 0.1
@@ -59,66 +55,63 @@ static void	trace(t_ray *intersect, t_rgb *color, t_ray ray, t_rt *rt, int depth
 			return ;
 		rrFactor = 1.0 / (1.0 - rrStopProbability);
 	}
-	index = findintersect(intersect, ray, rt);
-	if (index == -1)
+	if ((index = findintersect(intersect, ray, rt)) == -1)
 		return ;
-	tmp = rt->obj;
-	while (--index >= 0)
-		tmp = tmp->next;
+	obj = rt->a_obj[index];
 // Travel the ray to the hit point where the closest object lies and compute the surface
 	//normal there.
-	tmp->norm = tmp->normal(tmp->u, intersect->origin);
+	obj->norm = obj->normal(obj->u, intersect->origin);
 	ray.origin = intersect->origin;
 // Add the emission, the L_e(x,w) part of the rendering equation, but scale it with the Russian Roulette
 // probability weight.
-	*color = cadd(*color, cscalar(tmp->emission, rrFactor));
+	*color = cadd(*color, cscalar(obj->emission, rrFactor));
 
 	// Diffuse BRDF - choose an outgoing direction with hemisphere sampling.
-	if (tmp->diff)
+	if (obj->diff)
 	{
 		t_vect rotX, rotY;
-		ons(tmp->norm, &rotX, &rotY);
+		ons(obj->norm, &rotX, &rotY);
 		t_vect sampledDir = hemisphere(RND2, RND2);
 		t_vect rotatedDir;
-		rotatedDir.x = vdot((t_vect){rotX.x, rotY.x, tmp->norm.x}, sampledDir);
-		rotatedDir.y = vdot((t_vect){rotX.y, rotY.y, tmp->norm.y}, sampledDir);
-		rotatedDir.z = vdot((t_vect){rotX.z, rotY.z, tmp->norm.z}, sampledDir);
+		rotatedDir.x = vdot((t_vect){rotX.x, rotY.x, obj->norm.x}, sampledDir);
+		rotatedDir.y = vdot((t_vect){rotX.y, rotY.y, obj->norm.y}, sampledDir);
+		rotatedDir.z = vdot((t_vect){rotX.z, rotY.z, obj->norm.z}, sampledDir);
 		ray.dir = rotatedDir;	// already normalized
-		double cost = vdot(ray.dir, tmp->norm);
+		double cost = vdot(ray.dir, obj->norm);
 		trace(intersect, &clr2, ray, rt, depth + 1);
-		*color = cadd(*color, cscalar(cmult(clr2, tmp->clr), cost * 0.1 * rrFactor));
+		*color = cadd(*color, cscalar(cmult(clr2, obj->clr), cost * 0.1 * rrFactor));
 	}
 	// Specular BRDF - this is a singularity in the rendering equation that follows
 	// delta distribution, therefore we handle this case explicitly - one incoming
 	// direction -> one outgoing direction, that is, the perfect reflection direction.
-	if (tmp->spec)
+	if (obj->spec)
 	{
-		double cost = vdot(ray.dir, tmp->norm);
-		ray.dir = normalize(vdiff(ray.dir, vmult(tmp->norm, cost * 2)));
+		double cost = vdot(ray.dir, obj->norm);
+		ray.dir = normalize(vdiff(ray.dir, vmult(obj->norm, cost * 2)));
 		trace(intersect, &clr2, ray, rt, depth + 1);
 		*color = cadd(*color, cscalar(clr2, rrFactor));
 	}
 
 	// Glass/refractive BRDF - we use the vector version of Snell's law and Fresnel's law
 	// to compute the outgoing reflection and refraction directions and probability weights.
-	if (tmp->refract)
+	if (obj->refract)
 	{
 		double n = 1.5;
 		double R0 = (1.0 - n) / (1.0 + n);
 		R0 = R0*R0;
-		if (vdot(tmp->norm, ray.dir) > 0)
+		if (vdot(obj->norm, ray.dir) > 0)
 		{	// we're inside the medium
-			tmp->norm = invert(tmp->norm);
+			obj->norm = invert(obj->norm);
 			n = 1.0 / n;
 		}
-		n = 1.0 / (n == 0 ? EPS : n);
-		double cost1 = vdot(tmp->norm, ray.dir) * -1.0; // cosine of theta_1
+		n = 1.0 / n;
+		double cost1 = vdot(obj->norm, ray.dir) * -1.0; // cosine of theta_1
 		double cost2 = 1.0 - n*n*(1.0 - cost1*cost1); // cosine of theta_2
 		double Rprob = R0 + (1.0 - R0) * pow(1.0 - cost1, 5.0); // Schlick-approximation
 		if (cost2 > 0 && RND2 > Rprob) { // refraction direction
-			ray.dir = normalize(vadd(vmult(ray.dir, n), vmult(tmp->norm, n*cost1-sqrt(cost2))));
+			ray.dir = normalize(vadd(vmult(ray.dir, n), vmult(obj->norm, n*cost1-sqrt(cost2))));
 		} else { // reflection direction
-			ray.dir = normalize(vadd(ray.dir, vmult(tmp->norm, cost1 * 2)));
+			ray.dir = normalize(vadd(ray.dir, vmult(obj->norm, cost1 * 2)));
 		}
 		trace(intersect, &clr2, ray, rt, depth + 1);
 		*color = cadd(*color, cscalar(clr2, 1.15 * rrFactor));
@@ -141,7 +134,6 @@ void			scene(t_rt *rt)
 	t_xy		pixel;
 	t_ray		ray;
 	t_ray		intersection;
-	int			index;
 	int			i;
 	t_rgb		color;
 
@@ -154,15 +146,11 @@ void			scene(t_rt *rt)
 			pixel.x = -1;
 			while (++pixel.x < rt->w.width)
 			{
-				color = (t_rgb){1, 1, 1};
+				color = (t_rgb){0, 0, 0};
 				set_ray_xy(rt, &ray, &pixel);
 				trace(&intersection, &color, ray, rt, 0);
-		//		ft_printf("%.3lf  %.3lf  %.3lf\n", color.red,
-		//				color.blue, color.green);
 				i = (int)(pixel.x + (pixel.y * rt->w.width));
 				rt->image[i] = cadd(rt->image[i], color);
-		//		ft_printf("%.3lf  %.3lf  %.3lf\n", rt->image[i].red,
-		//				rt->image[i].blue, rt->image[i].green);
 			}
 		}
 	}

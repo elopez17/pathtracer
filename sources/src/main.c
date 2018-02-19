@@ -6,11 +6,23 @@
 /*   By: oabdalha <oabdalha@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/11/27 13:32:37 by oabdalha          #+#    #+#             */
-/*   Updated: 2018/02/17 13:20:36 by eLopez           ###   ########.fr       */
+/*   Updated: 2018/02/18 19:53:19 by eLopez           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <pt.h>
+
+static void	make_array(t_rt *rt)
+{
+	t_obj	*temp = rt->obj;
+
+	rt->a_obj = (t_obj**)ft_memalloc(sizeof(t_obj*) * rt->nodes);
+	for (int i = 0; i < rt->nodes; i++)
+	{
+		rt->a_obj[i] = temp;
+		temp = temp->next;
+	}
+}
 
 static void	init_rt(t_rt **rt, char *file)
 {
@@ -48,6 +60,7 @@ int			main(int argc, char *argv[])
 		rt_error(0);
 	init_rt(&rt, argv[1]);
 //	controls(rt);
+	make_array(rt);
 	scene(rt);
 	draw(rt);
 	mlx_hook(rt->win, 2, 0, &key_hook, &rt);
