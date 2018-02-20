@@ -6,7 +6,7 @@
 /*   By: eLopez <elopez@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/06 18:47:13 by eLopez            #+#    #+#             */
-/*   Updated: 2018/02/19 18:00:07 by eLopez           ###   ########.fr       */
+/*   Updated: 2018/02/19 21:49:43 by eLopez           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,6 +62,8 @@ static void	trace(t_ray *intersect, t_rgb *color, t_ray ray, t_rt *rt, int depth
 // Travel the ray to the hit point where the closest object lies and compute the surface
 	//normal there.
 	obj->norm = obj->normal(obj->u, intersect->origin);
+	if (vdot(obj->norm, ray.dir) < 0.0)
+		obj->norm = invert(obj->norm);
 	ray.origin = intersect->origin;
 // Add the emission, the L_e(x,w) part of the rendering equation, but scale it with the Russian Roulette
 // probability weight.
@@ -78,7 +80,7 @@ static void	trace(t_ray *intersect, t_rgb *color, t_ray ray, t_rt *rt, int depth
 		rotatedDir.y = vdot((t_vect){rotX.y, rotY.y, obj->norm.y}, sampledDir);
 		rotatedDir.z = vdot((t_vect){rotX.z, rotY.z, obj->norm.z}, sampledDir);
 		ray.dir = rotatedDir;	// already normalized
-		double cost = fabs(vdot(ray.dir, obj->norm));
+		double cost = vdot(ray.dir, obj->norm);
 		trace(intersect, &clr2, ray, rt, depth + 1);
 		*color = cadd(*color, cscalar(cmult(clr2, obj->clr), cost * 0.1 * rrFactor));
 	}
