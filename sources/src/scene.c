@@ -6,7 +6,7 @@
 /*   By: eLopez <elopez@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/06 18:47:13 by eLopez            #+#    #+#             */
-/*   Updated: 2018/02/18 23:01:40 by eLopez           ###   ########.fr       */
+/*   Updated: 2018/02/19 18:00:07 by eLopez           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 
 static inline t_vect	hemisphere(double u1, double u2)
 {
+//	ft_printf("%lf %lf\n", u1, u2);
 	const double r = sqrt(1.0 - u1*u1);
 	const double phi = 2 * PI * u2;
 	return ((t_vect){cos(phi)*r, sin(phi)*r, u1});
@@ -77,7 +78,7 @@ static void	trace(t_ray *intersect, t_rgb *color, t_ray ray, t_rt *rt, int depth
 		rotatedDir.y = vdot((t_vect){rotX.y, rotY.y, obj->norm.y}, sampledDir);
 		rotatedDir.z = vdot((t_vect){rotX.z, rotY.z, obj->norm.z}, sampledDir);
 		ray.dir = rotatedDir;	// already normalized
-		double cost = vdot(ray.dir, obj->norm);
+		double cost = fabs(vdot(ray.dir, obj->norm));
 		trace(intersect, &clr2, ray, rt, depth + 1);
 		*color = cadd(*color, cscalar(cmult(clr2, obj->clr), cost * 0.1 * rrFactor));
 	}
