@@ -1,9 +1,9 @@
 #include <pt.h>
 
-void	save_img(t_rt *rt, double samples)
+void	save_img(t_rt *rt)
 {
 	double	Lw = 0.0;
-	double	scale = 1.0 / samples;
+	double	scale = 1.0 / (double)SPP;
 	int		i;
 	double	this_lw;
 
@@ -43,4 +43,5 @@ void	save_img(t_rt *rt, double samples)
 			rt->image[i] = cscalar(rt->image[i], 255.0);
 			putpixel(rt, x, y, rt->image[i]);
 		}
+	draw(rt);
 }

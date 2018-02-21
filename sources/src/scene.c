@@ -6,7 +6,7 @@
 /*   By: eLopez <elopez@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/06 18:47:13 by eLopez            #+#    #+#             */
-/*   Updated: 2018/02/20 16:48:09 by eLopez           ###   ########.fr       */
+/*   Updated: 2018/02/21 11:32:16 by eLopez           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,10 +38,6 @@ void	ons(const t_vect n, t_vect *v2, t_vect *v3)
 		*v2 = (t_vect){0.0, n.z * invLen, -n.y * invLen};
 	}
 	*v3 = vcross(n, *v2);
-//	*v3 = vcross(*v2, n);
-/*	v3->x = (v2->x == 0.0) ? v2->x : fmod(n.x, v2->x);
-	v3->y = (v2->y == 0.0) ? v2->y : fmod(n.y, v2->y);
-	v3->z = (v2->z == 0.0) ? v2->z : fmod(n.z, v2->z);*/
 }
 
 static void	trace(t_ray *intersect, t_rgb *color, t_ray ray, t_rt *rt, int depth)
@@ -65,13 +61,12 @@ static void	trace(t_ray *intersect, t_rgb *color, t_ray ray, t_rt *rt, int depth
 // Travel the ray to the hit point where the closest object lies and compute the surface
 	//normal there.
 	obj->norm = obj->normal(obj->u, intersect->origin);
-	if (vdot(obj->norm, ray.dir) < 0.0)
-		obj->norm = invert(obj->norm);
+//	if (vdot(obj->norm, ray.dir) < 0.0)
+//		obj->norm = invert(obj->norm);
 	ray.origin = intersect->origin;
 // Add the emission, the L_e(x,w) part of the rendering equation, but scale it with the Russian Roulette
 // probability weight.
 	*color = cadd(*color, cscalar(obj->emission, rrFactor));
-
 	// Diffuse BRDF - choose an outgoing direction with hemisphere sampling.
 	if (obj->diff)
 	{
@@ -144,6 +139,7 @@ void			scene(t_rt *rt)
 	int			i;
 	t_rgb		color;
 
+	clock_t	begin = clock();
 	srand(time(NULL));
 	for (int iter = 0; iter < SPP; iter++)
 	{
@@ -161,5 +157,9 @@ void			scene(t_rt *rt)
 			}
 		}
 	}
+	clock_t	end = clock();
+	double seconds = (double)(end - begin) / (double)CLOCKS_PER_SEC;
+	ft_printf("%{RD} %.0lf%{nc} seconds\n%{RD} %.2lf%{nc} minutes\n", 
+			seconds, (seconds/60.0));
 	save_img(rt);
 }
