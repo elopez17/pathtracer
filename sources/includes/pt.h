@@ -6,7 +6,7 @@
 /*   By: eLopez <eLopez@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/07/21 00:06:40 by eLopez            #+#    #+#             */
-/*   Updated: 2018/02/19 22:27:06 by eLopez           ###   ########.fr       */
+/*   Updated: 2018/02/20 17:40:46 by eLopez           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,10 +25,10 @@
 # define MAX(a, b) ((a) > (b) ? (a) : (b))
 # define MIN(a, b) ((a) < (b) ? (a) : (b))
 # define PI 3.1415926536
-# define EPS 1e-5
+# define EPS 1e-6
 # define SPP 100
-# define RND2 ((double)rand_r(&rt->seed)/RAND_MAX)
-# define RND (2.0*(double)rand_r(&rt->seed)/RAND_MAX-1.0)
+# define RND2 ((double)rand()/(double)RAND_MAX)
+# define RND (2.0*(double)rand()/(double)RAND_MAX-1.0)
 # define KEYDOT 65
 # define KEYENT 76
 # define KTOP1 18
@@ -209,7 +209,6 @@ typedef struct			s_rt
 	int		nodes;
 	t_obj	*current;
 	int		toggle;
-	unsigned int	seed;
 }						t_rt;
 
 void					save_img(t_rt *rt);

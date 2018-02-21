@@ -42,6 +42,11 @@ scene {
 		color(204, 209, 70);
 		radius(1);
 	}
+	sphere {
+		origin(0, -1, 0);
+		color(250, 250, 250);
+		radius(.5);
+	}
 	cube {
 		origin(3, 0, 2);
 		color(30, 30, 190);

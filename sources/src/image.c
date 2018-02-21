@@ -1,9 +1,9 @@
 #include <pt.h>
 
-void	save_img(t_rt *rt)
+void	save_img(t_rt *rt, double samples)
 {
 	double	Lw = 0.0;
-	double	scale = 1.0 / (double)SPP;
+	double	scale = 1.0 / samples;
 	int		i;
 	double	this_lw;
 

@@ -6,7 +6,7 @@
 /*   By: eLopez <elopez@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/06 18:47:13 by eLopez            #+#    #+#             */
-/*   Updated: 2018/02/19 21:49:43 by eLopez           ###   ########.fr       */
+/*   Updated: 2018/02/20 16:48:09 by eLopez           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ static inline t_vect	hemisphere(double u1, double u2)
 {
 //	ft_printf("%lf %lf\n", u1, u2);
 	const double r = sqrt(1.0 - u1*u1);
-	const double phi = 2 * PI * u2;
+	const double phi = 2.0 * (double)PI * u2;
 	return ((t_vect){cos(phi)*r, sin(phi)*r, u1});
 }
 
@@ -37,9 +37,11 @@ void	ons(const t_vect n, t_vect *v2, t_vect *v3)
 		invLen = 1.0 / (denom == 0.0 ? EPS : denom);
 		*v2 = (t_vect){0.0, n.z * invLen, -n.y * invLen};
 	}
-	v3->x = (v2->x == 0.0) ? v2->x : fmod(n.x, v2->x);
+	*v3 = vcross(n, *v2);
+//	*v3 = vcross(*v2, n);
+/*	v3->x = (v2->x == 0.0) ? v2->x : fmod(n.x, v2->x);
 	v3->y = (v2->y == 0.0) ? v2->y : fmod(n.y, v2->y);
-	v3->z = (v2->z == 0.0) ? v2->z : fmod(n.z, v2->z);
+	v3->z = (v2->z == 0.0) ? v2->z : fmod(n.z, v2->z);*/
 }
 
 static void	trace(t_ray *intersect, t_rgb *color, t_ray ray, t_rt *rt, int depth)
@@ -51,6 +53,7 @@ static void	trace(t_ray *intersect, t_rgb *color, t_ray ray, t_rt *rt, int depth
 // Russian roulette: starting at depth 5, each recursive step will stop with a probability of 0.1
 	
 	if (depth >= 5) {
+		return ;
 		const double rrStopProbability = 0.1;
 		if (RND2 <= rrStopProbability)
 			return ;
@@ -80,6 +83,7 @@ static void	trace(t_ray *intersect, t_rgb *color, t_ray ray, t_rt *rt, int depth
 		rotatedDir.y = vdot((t_vect){rotX.y, rotY.y, obj->norm.y}, sampledDir);
 		rotatedDir.z = vdot((t_vect){rotX.z, rotY.z, obj->norm.z}, sampledDir);
 		ray.dir = rotatedDir;	// already normalized
+	//	ray.dir = normalize(vadd(obj->norm, sampledDir));
 		double cost = vdot(ray.dir, obj->norm);
 		trace(intersect, &clr2, ray, rt, depth + 1);
 		*color = cadd(*color, cscalar(cmult(clr2, obj->clr), cost * 0.1 * rrFactor));
@@ -140,7 +144,7 @@ void			scene(t_rt *rt)
 	int			i;
 	t_rgb		color;
 
-	rt->seed = time(NULL);
+	srand(time(NULL));
 	for (int iter = 0; iter < SPP; iter++)
 	{
 		pixel.y = -1;
@@ -149,7 +153,7 @@ void			scene(t_rt *rt)
 			pixel.x = -1;
 			while (++pixel.x < rt->w.width)
 			{
-				color = (t_rgb){0, 0, 0};
+				color = (t_rgb){1, 1, 1};
 				set_ray_xy(rt, &ray, &pixel);
 				trace(&intersection, &color, ray, rt, 0);
 				i = (int)(pixel.x + (pixel.y * rt->w.width));
