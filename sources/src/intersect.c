@@ -12,23 +12,19 @@
 
 #include <pt.h>
 
-inline double	pickinter(double inter0, double inter1)
+inline float	pickinter(float inter0, float inter1)
 {
 	if (inter0 >= EPS)
 		return (inter0);
 	return ((inter1 >= EPS) ? inter1 : -1);
 }
 
-double			findinterplane(t_ray ray, t_union u)
+float			findinterplane(t_ray ray, t_union u)
 {
-	double	a;
-	double	b;
+	float	a;
+	float	b;
 
-//	if ((a = vdot(ray.dir, u.plane.norm)) < 0.0)
-//	{
-//		u.plane.norm = invert(u.plane.norm);
 	a = vdot(ray.dir, u.plane.norm);
-//	}
 	if (a == 0)
 		return (-1);
 	b = vdot(u.plane.norm, vdiff(ray.origin,
@@ -36,7 +32,7 @@ double			findinterplane(t_ray ray, t_union u)
 	return (-b / a);
 }
 
-double			findintersphere(t_ray ray, t_union u)
+float			findintersphere(t_ray ray, t_union u)
 {
 	t_quad	q;
 	t_vect	dist;
@@ -49,20 +45,20 @@ double			findintersphere(t_ray ray, t_union u)
 						pow(dist.z, 2) - (u.sphere.radius * u.sphere.radius);
 	if ((q.d = q.b * q.b - 4 * q.a * q.c) < 0)
 		return (-1);
-	q.rslt[0] = ((-q.b - sqrt(q.d)) / (2 * q.a));
-	q.rslt[1] = ((-q.b + sqrt(q.d)) / (2 * q.a));
+	q.rslt[0] = ((-q.b - sqrtf(q.d)) / (2 * q.a));
+	q.rslt[1] = ((-q.b + sqrtf(q.d)) / (2 * q.a));
 	return (pickinter(q.rslt[0], q.rslt[1]));
 }
 
 int				findintersect(t_ray *intersect, t_ray ray, t_rt *rt)
 {
-	double	*intersects;
+	float	*intersects;
 	int		i;
 	t_obj	*objects;
 
 	i = -1;
 	objects = rt->obj;
-	intersects = (double*)malloc(sizeof(double) * rt->nodes);
+	intersects = (float*)malloc(sizeof(float) * rt->nodes);
 	while (++i < rt->nodes)
 	{
 		(i != 0) ? objects = objects->next : 0;
@@ -77,9 +73,9 @@ int				findintersect(t_ray *intersect, t_ray ray, t_rt *rt)
 	return (i);
 }
 
-int				winningobject(double *intersects, int nodes)
+int				winningobject(float *intersects, int nodes)
 {
-	double	max;
+	float	max;
 	int		i;
 	int		index;
 

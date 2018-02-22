@@ -12,20 +12,20 @@
 
 #include <pt.h>
 
-static inline t_vect	hemisphere(double u1, double u2)
+static inline t_vect	hemisphere(float u1, float u2)
 {
 //	ft_printf("%lf %lf\n", u1, u2);
-	const double r = sqrt(1.0 - u1*u1);
-	const double phi = 2.0 * (double)PI * u2;
+	const float r = sqrt(1.0 - u1*u1);
+	const float phi = 2.0 * (float)PI * u2;
 	return ((t_vect){cos(phi)*r, sin(phi)*r, u1});
 }
 
 void	ons(const t_vect n, t_vect *v2, t_vect *v3)
 {
-	double	invLen;
-	double	denom;
+	float	invLen;
+	float	denom;
 
-	if (fabs(n.x) > fabs(n.y)) {
+	if (fabsf(n.x) > fabsf(n.y)) {
 // project to the y = 0 plane and construct a normalized orthogonal vector in this plane
 		denom = sqrt(n.x * n.x + n.z * n.z);
 		invLen = 1.0 / (denom == 0.0 ? EPS : denom);
@@ -45,12 +45,12 @@ static void	trace(t_ray *intersect, t_rgb *color, t_ray ray, t_rt *rt, int depth
 	int		index;
 	t_obj	*obj;
 	t_rgb	clr2 = (t_rgb){1, 1, 1};
-	double	rrFactor = 1.0;
+	float	rrFactor = 1.0;
 // Russian roulette: starting at depth 5, each recursive step will stop with a probability of 0.1
 	
 	if (depth >= 5) {
 		return ;
-		const double rrStopProbability = 0.1;
+		const float rrStopProbability = 0.1;
 		if (RND2 <= rrStopProbability)
 			return ;
 		rrFactor = 1.0 / (1.0 - rrStopProbability);
@@ -61,12 +61,12 @@ static void	trace(t_ray *intersect, t_rgb *color, t_ray ray, t_rt *rt, int depth
 // Travel the ray to the hit point where the closest object lies and compute the surface
 	//normal there.
 	obj->norm = obj->normal(obj->u, intersect->origin);
-//	if (vdot(obj->norm, ray.dir) < 0.0)
-//		obj->norm = invert(obj->norm);
+	if (vdot(obj->norm, ray.dir) > 0.0)
+		obj->norm = invert(obj->norm);
 	ray.origin = intersect->origin;
 // Add the emission, the L_e(x,w) part of the rendering equation, but scale it with the Russian Roulette
 // probability weight.
-	*color = cadd(*color, cscalar(obj->emission, rrFactor));
+	*color = cadd(*color, obj->emission);
 	// Diffuse BRDF - choose an outgoing direction with hemisphere sampling.
 	if (obj->diff)
 	{
@@ -78,17 +78,24 @@ static void	trace(t_ray *intersect, t_rgb *color, t_ray ray, t_rt *rt, int depth
 		rotatedDir.y = vdot((t_vect){rotX.y, rotY.y, obj->norm.y}, sampledDir);
 		rotatedDir.z = vdot((t_vect){rotX.z, rotY.z, obj->norm.z}, sampledDir);
 		ray.dir = rotatedDir;	// already normalized
-	//	ray.dir = normalize(vadd(obj->norm, sampledDir));
-		double cost = vdot(ray.dir, obj->norm);
+		float cost = fabsf(vdot(ray.dir, obj->norm));
 		trace(intersect, &clr2, ray, rt, depth + 1);
-		*color = cadd(*color, cscalar(cmult(clr2, obj->clr), cost * 0.1 * rrFactor));
+//		*color = cadd(*color, cmult(obj->clr, cscalar(clr2, (double)cost)));
+		*color = cadd(*color, cscalar(cmult(clr2, obj->clr), (double)cost));
+	//	*color = cadd(*color, cmult(clr2, cscalar(obj->clr, (double)cost)));
+//		*color = cadd(cscalar(cadd(clr2, cscalar(obj->clr, (double)cost)), 0.5), obj->emission);
+//		*color = cadd(cmult(clr2, cscalar(obj->clr, (double)cost)), obj->emission);
+//		*color = cmult(clr2, cscalar(obj->clr, (double)cost));
+//		*color = cscalar(cmult(clr2, obj->clr), (double)cost);
+//		*color = cscalar(cadd(*color, cmult(clr2, obj->clr)), (double)cost);
+//		*color = cadd(*color, cscalar(cmult(clr2, obj->clr), (double)cost));
 	}
 	// Specular BRDF - this is a singularity in the rendering equation that follows
 	// delta distribution, therefore we handle this case explicitly - one incoming
 	// direction -> one outgoing direction, that is, the perfect reflection direction.
 	if (obj->spec)
 	{
-		double cost = vdot(ray.dir, obj->norm);
+		float cost = vdot(ray.dir, obj->norm);
 		ray.dir = normalize(vdiff(ray.dir, vmult(obj->norm, cost * 2)));
 		trace(intersect, &clr2, ray, rt, depth + 1);
 		*color = cadd(*color, cscalar(clr2, rrFactor));
@@ -98,8 +105,8 @@ static void	trace(t_ray *intersect, t_rgb *color, t_ray ray, t_rt *rt, int depth
 	// to compute the outgoing reflection and refraction directions and probability weights.
 	if (obj->refract)
 	{
-		double n = 1.5;
-		double R0 = (1.0 - n) / (1.0 + n);
+		float n = 1.5;
+		float R0 = (1.0 - n) / (1.0 + n);
 		R0 = R0*R0;
 		if (vdot(obj->norm, ray.dir) > 0)
 		{	// we're inside the medium
@@ -107,9 +114,9 @@ static void	trace(t_ray *intersect, t_rgb *color, t_ray ray, t_rt *rt, int depth
 			n = 1.0 / n;
 		}
 		n = 1.0 / n;
-		double cost1 = vdot(obj->norm, ray.dir) * -1.0; // cosine of theta_1
-		double cost2 = 1.0 - n*n*(1.0 - cost1*cost1); // cosine of theta_2
-		double Rprob = R0 + (1.0 - R0) * pow(1.0 - cost1, 5.0); // Schlick-approximation
+		float cost1 = vdot(obj->norm, ray.dir) * -1.0; // cosine of theta_1
+		float cost2 = 1.0 - n*n*(1.0 - cost1*cost1); // cosine of theta_2
+		float Rprob = R0 + (1.0 - R0) * pow(1.0 - cost1, 5.0); // Schlick-approximation
 		if (cost2 > 0 && RND2 > Rprob) { // refraction direction
 			ray.dir = normalize(vadd(vmult(ray.dir, n), vmult(obj->norm, n*cost1-sqrt(cost2))));
 		} else { // reflection direction
@@ -149,7 +156,7 @@ void			scene(t_rt *rt)
 			pixel.x = -1;
 			while (++pixel.x < rt->w.width)
 			{
-				color = (t_rgb){1, 1, 1};
+				color = (t_rgb){0, 0, 0};
 				set_ray_xy(rt, &ray, &pixel);
 				trace(&intersection, &color, ray, rt, 0);
 				i = (int)(pixel.x + (pixel.y * rt->w.width));
@@ -158,7 +165,7 @@ void			scene(t_rt *rt)
 		}
 	}
 	clock_t	end = clock();
-	double seconds = (double)(end - begin) / (double)CLOCKS_PER_SEC;
+	float seconds = (float)(end - begin) / (float)CLOCKS_PER_SEC;
 	ft_printf("%{RD} %.0lf%{nc} seconds\n%{RD} %.2lf%{nc} minutes\n", 
 			seconds, (seconds/60.0));
 	save_img(rt);

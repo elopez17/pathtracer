@@ -57,7 +57,7 @@ t_union	getcube(t_rt *rt)
 		else if (ft_strstr(line, "color") && ++g_flag)
 			u.cube.clr = getcolor(line);
 		else if (ft_strstr(line, "length") && ++g_flag)
-			u.cube.len = ft_atod(ft_strchr(line, '(') + 1);
+			u.cube.len = (float)ft_atod(ft_strchr(line, '(') + 1);
 		else if (ft_strrchr(line, '}') && ++g_flag)
 		{
 			ft_strdel(&line);

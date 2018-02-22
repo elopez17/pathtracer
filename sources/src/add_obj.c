@@ -29,8 +29,6 @@ void	addsphere(t_rt **rt)
 	obj->refract = 0;
 	obj->spec = 0;
 	obj->diff = 1;
-	obj->amb = 0.2;
-	obj->m = 4;
 	obj->next = (*rt)->obj;
 	(*rt)->obj = obj;
 	(*rt)->current = (*rt)->obj;
@@ -53,8 +51,6 @@ void	addplane(t_rt **rt)
 	obj->refract = 0;
 	obj->spec = 0;
 	obj->diff = 1;
-	obj->amb = 0.2;
-	obj->m = 4;
 	obj->next = (*rt)->obj;
 	(*rt)->obj = obj;
 	(*rt)->current = (*rt)->obj;
@@ -78,8 +74,6 @@ void	addcone(t_rt **rt)
 	obj->refract = 0;
 	obj->spec = 0;
 	obj->diff = 1;
-	obj->amb = 0.2;
-	obj->m = 4;
 	obj->next = (*rt)->obj;
 	(*rt)->obj = obj;
 	(*rt)->current = (*rt)->obj;
@@ -103,8 +97,6 @@ void	addcylin(t_rt **rt)
 	obj->refract = 0;
 	obj->spec = 0;
 	obj->diff = 1;
-	obj->amb = 0.2;
-	obj->m = 4;
 	obj->next = (*rt)->obj;
 	(*rt)->obj = obj;
 	(*rt)->current = (*rt)->obj;
@@ -129,8 +121,6 @@ void	addcube(t_rt **rt)
 	obj->refract = 0;
 	obj->spec = 0;
 	obj->diff = 1;
-	obj->amb = 0.2;
-	obj->m = 4;
 	obj->next = (*rt)->obj;
 	(*rt)->obj = obj;
 	(*rt)->current = (*rt)->obj;

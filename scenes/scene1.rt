@@ -9,7 +9,7 @@ scene {
 	}
 	sphere {
 		origin(-1, -1, -1);
-		color(250, 250, 250);
+		color(256, 256, 256);
 		radius(1);
 	}
 	cube {

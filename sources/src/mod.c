@@ -78,13 +78,7 @@ static void	changestate(t_obj **obj, int key)
 void		move_obj(int key, t_obj **obj, int toggle)
 {
 	(key == KEYRIGHT || key == KEYLEFT) ? changestate(obj, key) : 0;
-	if (key == KEYPLUS || key == KEYMIN)
-		(*obj)->amb += (key == KEYPLUS) ? 0.03 : -0.03;
-	else if (key == KEYN && (*obj)->m > 2)
-		(*obj)->m -= 3;
-	else if (key == KEYM && ((*obj)->m < 20))
-		(*obj)->m += 3;
-	else if ((*obj)->type == 1)
+	if ((*obj)->type == 1)
 		mod_sphere(key, obj);
 	else if ((*obj)->type == 2)
 		mod_plane(key, obj);

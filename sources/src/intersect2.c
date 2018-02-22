@@ -11,9 +11,9 @@
 /* ************************************************************************** */
 
 #include <pt.h>
-#define SWAPD(a, b)({double tmp = a; a = b; b = tmp;})
+#define SWAPD(a, b)({float tmp = a; a = b; b = tmp;})
 
-double		findintercube(t_ray ray, t_union u)
+float		findintercube(t_ray ray, t_union u)
 {
 	t_vect	min;
 	t_vect	max;
@@ -41,11 +41,11 @@ double		findintercube(t_ray ray, t_union u)
 	return (pickinter(min.x, max.x));
 }
 
-double		findintercone(t_ray ray, t_union u)
+float		findintercone(t_ray ray, t_union u)
 {
 	t_quad	q;
-	double	cos_a;
-	double	sin_a;
+	float	cos_a;
+	float	sin_a;
 
 	cos_a = cos(u.cone.a);
 	sin_a = sin(u.cone.a);
@@ -62,12 +62,12 @@ vdot(vdiff(ray.origin, u.cone.pos), u.cone.dir) * vdot(
 vdiff(ray.origin, u.cone.pos), u.cone.dir);
 	if ((q.d = q.b * q.b - 4 * q.a * q.c) < 0)
 		return (-1);
-	q.rslt[0] = (-q.b - sqrt(q.d)) / (2 * q.a);
-	q.rslt[1] = (-q.b + sqrt(q.d)) / (2 * q.a);
+	q.rslt[0] = (-q.b - sqrtf(q.d)) / (2 * q.a);
+	q.rslt[1] = (-q.b + sqrtf(q.d)) / (2 * q.a);
 	return (pickinter(q.rslt[0], q.rslt[1]));
 }
 
-double		findintercylinder(t_ray ray, t_union u)
+float		findintercylinder(t_ray ray, t_union u)
 {
 	t_quad	q;
 
@@ -81,7 +81,7 @@ vdot(vdiff(ray.origin, u.cylinder.pos), u.cylinder.dir)))) -
 										u.cylinder.radius * u.cylinder.radius;
 	if ((q.d = q.b * q.b - 4 * q.a * q.c) < 0)
 		return (-1);
-	q.rslt[0] = (-q.b - sqrt(q.d)) / (2 * q.a);
-	q.rslt[1] = (-q.b + sqrt(q.d)) / (2 * q.a);
+	q.rslt[0] = (-q.b - sqrtf(q.d)) / (2 * q.a);
+	q.rslt[1] = (-q.b + sqrtf(q.d)) / (2 * q.a);
 	return (pickinter(q.rslt[0], q.rslt[1]));
 }

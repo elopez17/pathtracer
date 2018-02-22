@@ -31,8 +31,8 @@ void		getobject(int type, t_union u, t_rt *rt)
 		OBJINFO(obj, &cylinder_norm, &findintercylinder, u.cylinder.clr);
 	else if (type == 5)
 		OBJINFO(obj, &cube_norm, &findintercube, u.cube.clr);
-	if (obj->clr.red == 250 && obj->clr.green == 250 && obj->clr.blue == 250){
-		obj->emission = (t_rgb){1250, 1250, 1250};//255*5=1275
+	if (obj->clr.red == 1 && obj->clr.green == 1 && obj->clr.blue == 1){
+		obj->emission = (t_rgb){5, 5, 5};//255*5=1275
 	}
 	else {
 		obj->emission = (t_rgb){0, 0, 0};
@@ -40,8 +40,6 @@ void		getobject(int type, t_union u, t_rt *rt)
 	obj->refract = 0;
 	obj->spec = 0;
 	obj->diff = 1;
-	obj->amb = 0.2;
-	obj->m = 4;
 	obj->next = rt->obj;
 	rt->obj = obj;
 }
@@ -53,13 +51,13 @@ t_vect		getxyz(const char *line)
 	vect = (t_vect){0, 0, 0};
 	if ((line = ft_strrchr(line, '(')) == NULL)
 		rt_error(2);
-	vect.x = ft_atod(++line);
+	vect.x = (float)ft_atod(++line);
 	if ((line = ft_strchr(line, ',')) == NULL)
 		rt_error(2);
-	vect.y = ft_atod(++line);
+	vect.y = (float)ft_atod(++line);
 	if ((line = ft_strchr(line, ',')) == NULL)
 		rt_error(2);
-	vect.z = ft_atod(++line);
+	vect.z = (float)ft_atod(++line);
 	return (vect);
 }
 

@@ -28,8 +28,8 @@
 # define PI 3.1415926536
 # define EPS 1e-6
 # define SPP 100
-# define RND2 ((double)rand()/(double)RAND_MAX)
-# define RND (2.0*(double)rand()/(double)RAND_MAX-1.0)
+# define RND2 ((float)rand()/(float)RAND_MAX)
+# define RND (2.0*(float)rand()/(float)RAND_MAX-1.0)
 # define KEYDOT 65
 # define KEYENT 76
 # define KTOP1 18
@@ -75,30 +75,30 @@ typedef struct			s_dimensions
 
 typedef struct			s_xy
 {
-	double	x;
-	double	y;
+	float	x;
+	float	y;
 }						t_xy;
 
 typedef struct			s_quad
 {
-	double	a;
-	double	b;
-	double	c;
-	double	d;
-	double	rslt[2];
+	float	a;
+	float	b;
+	float	c;
+	float	d;
+	float	rslt[2];
 }						t_quad;
 
 typedef struct			s_vector
 {
-	double		x;
-	double		y;
-	double		z;
+	float		x;
+	float		y;
+	float		z;
 }						t_vect;
 
 typedef struct			s_distance
 {
 	t_vect	dist;
-	double	dist_mag;
+	float	dist_mag;
 	int		i;
 }						t_dist;
 
@@ -127,7 +127,7 @@ typedef struct			s_camera
 typedef struct			s_cube
 {
 	t_vect	pos;
-	double	len;
+	float	len;
 	t_vect	min;
 	t_vect	max;
 	t_rgb	clr;
@@ -136,14 +136,14 @@ typedef struct			s_cube
 typedef struct			s_sphere
 {
 	t_vect	pos;
-	double	radius;
+	float	radius;
 	t_rgb	clr;
 }						t_sphere;
 
 typedef struct			s_plane
 {
 	t_vect	norm;
-	double	dist;
+	float	dist;
 	t_rgb	clr;
 }						t_plane;
 
@@ -151,7 +151,7 @@ typedef struct			s_cone
 {
 	t_vect	pos;
 	t_vect	dir;
-	double	a;
+	float	a;
 	t_rgb	clr;
 }						t_cone;
 
@@ -159,7 +159,7 @@ typedef struct			s_cylinder
 {
 	t_vect	pos;
 	t_vect	dir;
-	double	radius;
+	float	radius;
 	t_rgb	clr;
 }						t_cylinder;
 
@@ -177,15 +177,13 @@ typedef struct			s_objects
 	int					type;
 	t_union				u;
 	t_vect				(*normal)();
-	double				(*inter)();
+	float				(*inter)();
 	t_vect				norm;
 	t_rgb				clr;
 	t_rgb				emission;
 	int					refract;
 	int					spec;
 	int					diff;
-	double				amb;
-	double				m;
 	struct s_objects	*next;
 }						t_obj;
 
@@ -220,25 +218,25 @@ int						mousepress(int key, int x, int y, t_rt **rt);
 void					move_obj(int key, t_obj **obj, int toggle);
 int						close_hook(t_rt **rt);
 int						expose_hook(t_rt **rt);
-extern inline t_vect	normalize(t_vect v);
-extern inline t_vect	invert(t_vect v);
-extern inline double	vdot(t_vect v1, t_vect v2);
-extern inline double	norm_vect(t_vect v);
-extern inline double	vsqr(t_vect v);
-extern inline double	vlen(t_vect v);
-extern inline t_vect	vcross(t_vect v1, t_vect v2);
-extern inline t_vect	vadd(t_vect v1, t_vect v2);
-extern inline t_vect	vmult(t_vect v, double scalar);
-extern inline t_vect	vdiv(t_vect v, double denominator);
-extern inline t_vect	vdiff(t_vect v1, t_vect v2);
+extern inline t_vect	normalize(const t_vect v);
+extern inline t_vect	invert(const t_vect v);
+extern inline float		vdot(const t_vect v1, const t_vect v2);
+extern inline float		norm_vect(const t_vect v);
+extern inline float		vsqr(const t_vect v);
+extern inline float		vlen(const t_vect v);
+extern inline t_vect	vcross(const t_vect v1, const t_vect v2);
+extern inline t_vect	vadd(const t_vect v1, const t_vect v2);
+extern inline t_vect	vmult(const t_vect v, const float scalar);
+extern inline t_vect	vdiv(const t_vect v, float denominator);
+extern inline t_vect	vdiff(const t_vect v1, const t_vect v2);
 extern inline void		set_ray_xy(t_rt *rt, t_ray *ray, t_xy *pixel);
-int						winningobject(double *intersects, int nodes);
-double					findinterplane(t_ray ray, t_union u);
-double					findintersphere(t_ray ray, t_union u);
-double					findintercone(t_ray ray, t_union u);
-double					findintercylinder(t_ray ray, t_union u);
-double					findintercube(t_ray ray, t_union u);
-extern inline double	pickinter(double inter0, double inter1);
+int						winningobject(float *intersects, int nodes);
+float					findinterplane(t_ray ray, t_union u);
+float					findintersphere(t_ray ray, t_union u);
+float					findintercone(t_ray ray, t_union u);
+float					findintercylinder(t_ray ray, t_union u);
+float					findintercube(t_ray ray, t_union u);
+extern inline float		pickinter(float inter0, float inter1);
 extern inline t_vect	cube_norm(t_union u, t_vect point);
 extern inline t_vect	sphere_norm(t_union u, t_vect point);
 extern inline t_vect	plane_norm(t_union u, t_vect point);

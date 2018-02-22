@@ -21,13 +21,13 @@ t_rgb	getcolor(const char *line)
 	color = (t_rgb){0, 0, 0};
 	if ((line = ft_strrchr(line, '(')) == NULL)
 		rt_error(2);
-	color.red = ft_atod(++line);
+	color.red = ft_atod(++line) / 256.0;
 	if ((line = ft_strchr(line, ',')) == NULL)
 		rt_error(2);
-	color.green = ft_atod(++line);
+	color.green = ft_atod(++line) / 256.0;
 	if ((line = ft_strchr(line, ',')) == NULL)
 		rt_error(2);
-	color.blue = ft_atod(++line);
+	color.blue = ft_atod(++line) / 256.0;
 	return (color);
 }
 
@@ -44,7 +44,7 @@ t_union	getsphere(t_rt *rt)
 		else if (ft_strstr(line, "color") && ++g_flag)
 			u.sphere.clr = getcolor(line);
 		else if (ft_strstr(line, "radius") && ++g_flag)
-			u.sphere.radius = ft_atod(ft_strchr(line, '(') + 1);
+			u.sphere.radius = (float)ft_atod(ft_strchr(line, '(') + 1);
 		else if (ft_strrchr(line, '}') && ++g_flag)
 		{
 			ft_strdel(&line);
@@ -72,7 +72,7 @@ t_union	getplane(t_rt *rt)
 		else if (ft_strstr(line, "color") && ++g_flag)
 			u.plane.clr = getcolor(line);
 		else if (ft_strstr(line, "distance") && ++g_flag)
-			u.plane.dist = ft_atod(ft_strchr(line, '(') + 1);
+			u.plane.dist = (float)ft_atod(ft_strchr(line, '(') + 1);
 		else if (ft_strrchr(line, '}') && ++g_flag)
 		{
 			ft_strdel(&line);
@@ -102,7 +102,7 @@ t_union	getcylinder(t_rt *rt)
 		else if (ft_strstr(line, "color") && ++g_flag)
 			u.cylinder.clr = getcolor(line);
 		else if (ft_strstr(line, "radius") && ++g_flag)
-			u.cylinder.radius = ft_atod(ft_strchr(line, '(') + 1);
+			u.cylinder.radius = (float)ft_atod(ft_strchr(line, '(') + 1);
 		else if (ft_strrchr(line, '}') && ++g_flag)
 		{
 			ft_strdel(&line);
@@ -131,7 +131,7 @@ t_union	getcone(t_rt *rt)
 		else if (ft_strstr(line, "color") && ++g_flag)
 			u.cone.clr = getcolor(line);
 		else if (ft_strstr(line, "angle") && ++g_flag)
-			u.cone.a = (M_PI / 180) * ft_atod(ft_strchr(line, '(') + 1);
+			u.cone.a = (M_PI / 180) * (float)ft_atod(ft_strchr(line, '(') + 1);
 		else if (ft_strrchr(line, '}') && ++g_flag)
 		{
 			ft_strdel(&line);
