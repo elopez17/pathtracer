@@ -3,7 +3,7 @@
 void	save_img(t_rt *rt)
 {
 	double	Lw = 0.0;
-	double	scale = 1.0 / (double)SPP;
+	double	scale = 1.0 / 50.0;
 	int		i;
 	double	this_lw;
 

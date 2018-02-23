@@ -6,7 +6,7 @@
 /*   By: eLopez <elopez@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/06 18:50:51 by eLopez            #+#    #+#             */
-/*   Updated: 2018/02/20 18:10:32 by eLopez           ###   ########.fr       */
+/*   Updated: 2018/02/22 16:09:59 by eLopez           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 
 void	draw(t_rt *rt)
 {
+	mlx_do_sync(rt->mlx);
 	mlx_clear_window(rt->mlx, rt->win);
 	mlx_put_image_to_window(rt->mlx, rt->win, rt->img, 0, 0);
 }
