@@ -6,7 +6,7 @@
 /*   By: eLopez <elopez@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/06 18:47:13 by eLopez            #+#    #+#             */
-/*   Updated: 2018/02/22 17:28:44 by eLopez           ###   ########.fr       */
+/*   Updated: 2018/02/24 00:20:59 by eLopez           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ void	ons(const t_vect n, t_vect *v2, t_vect *v3)
 	*v3 = vcross(n, *v2);
 }
 
-static void	sample_light(t_rt *rt, t_ray ray, t_rgb *color)
+static float	sample_light(t_rt *rt, t_ray ray, const t_vect normal)
 {
 	t_ray	shadow;
 	t_vect	light_dist;
@@ -49,45 +49,37 @@ static void	sample_light(t_rt *rt, t_ray ray, t_rgb *color)
 	t_obj	*obj;
 	int		in_shadow;
 	t_union	u;
-	t_rgb	direct = (t_rgb){0, 0, 0};
 
 	u.sphere.pos = rt->light[0];
 	u.sphere.radius = .5;
 	u.sphere.clr = (t_rgb){1, 1, 1};
 	shadow.origin = ray.origin;
-//	light_dist = vdiff(rt->light[0], shadow.origin);
-//	shadow.dir = normalize(vdiff(rt->light[0], shadow.origin));
-//	dist_mag = findintersphere(shadow, u);
-//	dist_mag = sqrtf(powf(light_dist.x, 2) + powf(light_dist.y, 2) + powf(light_dist.z, 2));
-	for (int j = 0; j < 3; j++)
+	in_shadow = 0;
+	t_vect tmp = (t_vect){rt->light[0].x + (RND2 - 0.5),
+		rt->light[0].y + (RND2 - 0.5), rt->light[0].z + (RND2 - 0.5)};
+	shadow.dir = normalize(vdiff(tmp, shadow.origin));
+	if ((dist_mag = findintersphere(shadow, u)) == -1)
+		return (0);
+	for (int i = 0; i < rt->nodes; i++)
 	{
-		in_shadow = 0;
-		t_vect tmp = (t_vect){rt->light[0].x + (RND2 - 0.5),
-			rt->light[0].y + (RND2 - 0.5), rt->light[0].z + (RND2 - 0.5)};
-		shadow.dir = normalize(vdiff(tmp, shadow.origin));
-		if ((dist_mag = findintersphere(shadow, u)) == -1)
-			continue ;
-		for (int i = 0; i < rt->nodes; i++)
-		{
-			obj = rt->a_obj[i];
-			intersects[i] = obj->inter(shadow, obj->u);
-			if (intersects[i] >= EPS && intersects[i] <= dist_mag)
-				in_shadow = 1;
-		}
-		if (in_shadow)
-			continue ;
-		direct = cadd(direct, cscalar((t_rgb){1, 1, 1}, (1.0/dist_mag)));
+		obj = rt->a_obj[i];
+		intersects[i] = obj->inter(shadow, obj->u);
+		if (intersects[i] >= EPS && intersects[i] < dist_mag)
+			in_shadow = 1;
 	}
-	*color = cadd(*color, cscalar(direct, 0.3333));
-//	ft_printf("%f\n", dist_mag);
+	if (in_shadow)
+		return (0);
+	float	cost = fabsf(vdot(normal, shadow.dir));
+	return (cost);
 }
 
 static void	trace(t_ray *intersect, t_rgb *color, t_ray ray, t_rt *rt, int depth)
 {
 	int		index;
 	t_obj	*obj;
-	t_rgb	clr2 = (t_rgb){1, 1, 1};
+	t_rgb	clr2 = (t_rgb){0, 0, 0};
 	float	rrFactor = 1.0;
+	float	cos_L;
 // Russian roulette: starting at depth 5, each recursive step will stop with a probability of 0.1
 	
 	if (depth >= 5) {
@@ -108,8 +100,8 @@ static void	trace(t_ray *intersect, t_rgb *color, t_ray ray, t_rt *rt, int depth
 	ray.origin = intersect->origin;
 // Add the emission, the L_e(x,w) part of the rendering equation, but scale it with the Russian Roulette
 // probility weight.
-	sample_light(rt, ray, color);
-	//*color = cadd(*color, obj->emission);
+	cos_L = sample_light(rt, ray, obj->norm);
+	*color = cadd(*color, obj->emission);
 	// Diffuse BRDF - choose an outgoing direction with hemisphere sampling.
 	if (obj->diff)
 	{
@@ -123,12 +115,15 @@ static void	trace(t_ray *intersect, t_rgb *color, t_ray ray, t_rt *rt, int depth
 		ray.dir = rotatedDir;	// already normalized
 		float cost = vdot(ray.dir, obj->norm);
 		trace(intersect, &clr2, ray, rt, depth + 1);
-//		*color = cadd(*color, cmult(obj->clr, cscalar(clr2, (double)cost)));
-	//	*color = cadd(*color, cscalar(cmult(clr2, obj->clr), (double)cost));
-		*color = cadd(*color, cmult(clr2, cscalar(obj->clr, (double)cost)));
+	//	*color = cadd(*color, cscalar(cadd(obj->clr, clr2), (double)cost));
+	//	*color = cadd(*color, cadd(clr2, cscalar(obj->clr, (double)cost)));
+		*color = cadd(*color, cadd(cscalar(obj->clr, (double)cos_L), cscalar(clr2, (double)cost)));
+	//	*color = cadd(*color, cscalar(clr2, (double)cost));
+	//	*color = cadd(*color, cadd(obj->clr, cscalar(clr2, (double)cost)));
+//		*color = cadd(*color, cmult(clr2, cscalar(obj->clr, (double)cost)));
 //		*color = cadd(cscalar(cadd(clr2, cscalar(obj->clr, (double)cost)), 0.5), obj->emission);
 //		*color = cadd(cmult(clr2, cscalar(obj->clr, (double)cost)), obj->emission);
-//		*color = cmult(clr2, cscalar(obj->clr, (double)cost));
+	//	*color = cmult(clr2, cscalar(obj->clr, (double)cost));
 //		*color = cscalar(cmult(clr2, obj->clr), (double)cost);
 //		*color = cscalar(cadd(*color, cmult(clr2, obj->clr)), (double)cost);
 //		*color = cadd(*color, cscalar(cmult(clr2, obj->clr), (double)cost));
@@ -207,11 +202,9 @@ void			scene(t_rt *rt)
 			}
 		}
 		if (((iter + 1) % 50) == 0)
-		{
-			ft_printf("%d\n", iter);
-			save_img(rt);
-		}
+			ft_printf("%d\n", iter + 1);
 	}
+	save_img(rt);
 	clock_t	end = clock();
 	float seconds = (float)(end - begin) / (float)CLOCKS_PER_SEC;
 	ft_printf("%{RD} %.0lf%{nc} seconds\n%{RD} %.2lf%{nc} minutes\n", 

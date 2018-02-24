@@ -5,11 +5,11 @@ scene {
 	}
 	light {
 		lights(1);
-		origin(3, -5, 2);
+		origin(0, -5, 0);
 	}
 	sphere {
-		origin(-1, -1, -1);
-		color(201, 26, 201);
+		origin(3, 0, 2);
+		color(200, 25, 56);
 		radius(1);
 	}
 	cube {
@@ -19,7 +19,7 @@ scene {
 	}
 	plane {
 		origin(0, 1, 0);
-		color(1, 150, 150);
+		color(1, 180, 180);
 		distance(1);
 	}
 }

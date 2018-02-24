@@ -6,7 +6,7 @@
 /*   By: oabdalha <oabdalha@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/11/27 13:32:37 by oabdalha          #+#    #+#             */
-/*   Updated: 2018/02/22 12:04:24 by eLopez           ###   ########.fr       */
+/*   Updated: 2018/02/23 20:40:19 by eLopez           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,12 +31,10 @@ void		getobject(int type, t_union u, t_rt *rt)
 		OBJINFO(obj, &cylinder_norm, &findintercylinder, u.cylinder.clr);
 	else if (type == 5)
 		OBJINFO(obj, &cube_norm, &findintercube, u.cube.clr);
-	if (obj->clr.red == 1 && obj->clr.green == 1 && obj->clr.blue == 1){
+	if (obj->clr.red == 1 && obj->clr.green == 1 && obj->clr.blue == 1)
 		obj->emission = (t_rgb){0, 0, 0};//255*5=1275
-	}
-	else {
+	else
 		obj->emission = (t_rgb){0, 0, 0};
-	}
 	obj->refract = 0;
 	obj->spec = 0;
 	obj->diff = 1;
