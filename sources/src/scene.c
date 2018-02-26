@@ -6,7 +6,7 @@
 /*   By: eLopez <elopez@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/06 18:47:13 by eLopez            #+#    #+#             */
-/*   Updated: 2018/02/24 00:20:59 by eLopez           ###   ########.fr       */
+/*   Updated: 2018/02/25 20:41:21 by eLopez           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,14 +47,13 @@ static float	sample_light(t_rt *rt, t_ray ray, const t_vect normal)
 	float	dist_mag;
 	float	intersects[rt->nodes];
 	t_obj	*obj;
-	int		in_shadow;
+	int		in_shadow = 0;
 	t_union	u;
 
 	u.sphere.pos = rt->light[0];
 	u.sphere.radius = .5;
 	u.sphere.clr = (t_rgb){1, 1, 1};
 	shadow.origin = ray.origin;
-	in_shadow = 0;
 	t_vect tmp = (t_vect){rt->light[0].x + (RND2 - 0.5),
 		rt->light[0].y + (RND2 - 0.5), rt->light[0].z + (RND2 - 0.5)};
 	shadow.dir = normalize(vdiff(tmp, shadow.origin));
@@ -65,12 +64,15 @@ static float	sample_light(t_rt *rt, t_ray ray, const t_vect normal)
 		obj = rt->a_obj[i];
 		intersects[i] = obj->inter(shadow, obj->u);
 		if (intersects[i] >= EPS && intersects[i] < dist_mag)
+		{
 			in_shadow = 1;
+			break ;
+		}
 	}
 	if (in_shadow)
 		return (0);
-	float	cost = fabsf(vdot(normal, shadow.dir));
-	return (cost);
+	float	cost = vdot(normal, normalize(vdiff(rt->light[0], shadow.origin)));
+	return (cost < 0.0 ? 0 : cost);
 }
 
 static void	trace(t_ray *intersect, t_rgb *color, t_ray ray, t_rt *rt, int depth)

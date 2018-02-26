@@ -5,7 +5,7 @@ scene {
 	}
 	light {
 		lights(1);
-		origin(-2, -3, -4);
+		origin(-1, -1, -4);
 	}
 	plane {
 		origin(0, 1, 0);
@@ -38,12 +38,12 @@ scene {
 		radius(1);
 	}
 	sphere {
-		origin(0, -1, 0);
+		origin(0, -2, 0);
 		color(204, 209, 70);
 		radius(.8);
 	}
 	sphere {
-		origin(-2, -1, -1);
+		origin(-2, 1, -1);
 		color(256, 256, 256);
 		radius(.8);
 	}

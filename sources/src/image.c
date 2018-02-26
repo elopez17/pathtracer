@@ -14,7 +14,8 @@ void	save_img(t_rt *rt)
 	//		ft_printf("%lf\n%lf\n%lf\n", rt->image[i].red, rt->image[i].green, 
 	//				rt->image[i].blue);
 			rt->image[i] = cscalar(rt->image[i], scale);
-			putpixel(rt, x, y, cscalar(rt->image[i], 256.0));
+			putpixel(rt, x, y, rt->image[i]);
+		//	putpixel(rt, x, y, cscalar(rt->image[i], 256.0));
 	//		ft_printf("%lf %lf %lf\n", rt->image[i].red, rt->image[i].green, 
 	//				rt->image[i].blue);
 //			this_lw = log(0.1 + rt->image[i].red +  rt->image[i].green + rt->image[i].blue);
